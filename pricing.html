@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pricing & Plans - CastingCore</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+    }
+    
+    .pricing-header {
+      text-align: center;
+      margin: 4rem auto 3rem;
+      max-width: 800px;
+    }
+    
+    .pricing-header h1 {
+      font-size: 3rem;
+      letter-spacing: -1px;
+      margin-bottom: 1rem;
+    }
+    
+    .pricing-header p {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+    
+    .toggle-container {
+      display: inline-flex;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 50px;
+      padding: 0.25rem;
+      margin: 0 auto 3rem;
+    }
+    
+    .toggle-btn {
+      background: transparent;
+      color: var(--text-secondary);
+      border: none;
+      padding: 0.75rem 2rem;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: 50px;
+      transition: all 0.3s ease;
+    }
+    
+    .toggle-btn.active {
+      background: var(--text-primary);
+      color: var(--bg-primary);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+    
+    .pricing-grid {
+      display: flex;
+      gap: 2rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 5rem;
+    }
+    
+    .pricing-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 24px;
+      padding: 3rem 2.5rem;
+      width: 100%;
+      max-width: 380px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+    
+    .pricing-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+    }
+    
+    .pricing-card.featured {
+      border-color: var(--accent-color);
+      background: linear-gradient(180deg, rgba(235, 255, 112, 0.05) 0%, rgba(28,28,28,1) 100%);
+    }
+    
+    .featured-badge {
+      position: absolute;
+      top: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--accent-color);
+      color: var(--bg-primary);
+      padding: 0.25rem 1rem;
+      border-radius: 50px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .plan-name {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    
+    .plan-price {
+      font-size: 3.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--text-primary);
+    }
+    
+    .plan-price span {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      font-weight: 400;
+    }
+    
+    .plan-desc {
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+      line-height: 1.5;
+      font-size: 0.95rem;
+    }
+    
+    .feature-list {
+      list-style: none;
+      margin-bottom: 3rem;
+      flex-grow: 1;
+    }
+    
+    .feature-list li {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+      font-size: 0.95rem;
+      color: var(--text-primary);
+    }
+    
+    .feature-list li svg {
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+      margin-right: 0.75rem;
+      margin-top: 0.1rem;
+    }
+    
+    .feature-list li.pro-feature svg {
+      color: var(--accent-color);
+    }
+
+    .feature-list li.missing {
+      color: var(--text-secondary);
+      opacity: 0.6;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-brand">CastingCore</div>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="talents.html" class="nav-link">Talent Directory</a>
+      <a href="ads.html" class="nav-link">Casting Calls</a>
+      <a href="pricing.html" class="nav-link">Pricing</a>
+      <a href="admin.html" class="nav-link">Admin Panel</a>
+    </div>
+  </nav>
+
+  <div class="container pricing-header">
+    <h1>Simple, transparent pricing</h1>
+    <p>Whether you're an agency sourcing blockbuster talent, or an actor hunting for your breakout role, we have plans tailored exactly to your needs.</p>
+    
+    <div class="toggle-container" style="margin-top: 2.5rem;">
+      <button class="toggle-btn active" id="btn-agencies" onclick="switchTab('agencies')">For Directors & Agencies</button>
+      <button class="toggle-btn" id="btn-actors" onclick="switchTab('actors')">For Actors & Models</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- AGENCIES GRID -->
+    <div class="pricing-grid" id="grid-agencies">
+      
+      <!-- Free Agency -->
+      <div class="pricing-card">
+        <h3 class="plan-name">Entry Level</h3>
+        <div class="plan-price">$0 <span>/ forever</span></div>
+        <p class="plan-desc">Perfect for testing the waters and browsing the catalog before committing.</p>
+        
+        <ul class="feature-list">
+          <li><svg stroke="currentColor" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> View basic actor profiles</li>
+          <li><svg stroke="currentColor" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Post 1 Casting Call/mo</li>
+          <li class="missing"><svg stroke="currentColor" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg> Direct messaging/contact</li>
+          <li class="missing"><svg stroke="currentColor" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg> Advanced filtering</li>
+        </ul>
+        
+        <a href="register.html?mode=agency&tier=free" class="btn-secondary" style="text-align: center;">Start for free</a>
+      </div>
+
+      <!-- Pro Agency -->
+      <div class="pricing-card featured">
+        <div class="featured-badge">Most Popular</div>
+        <h3 class="plan-name">Pro Agency</h3>
+        <div class="plan-price">$49 <span>/ month</span></div>
+        <p class="plan-desc">The core platform. Full access to securely contact talent instantly.</p>
+        
+        <ul class="feature-list">
+          <li class="pro-feature"><svg stroke="currentColor" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> <strong>Unlimited Direct Contact</strong></li>
+          <li class="pro-feature"><svg stroke="currentColor" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> <strong>Advanced Filters (Age, Look)</strong></li>
+          <li><svg stroke="currentColor" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Save shortlists & favorites</li>
+          <li><svg stroke="currentColor" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Post unlimited Casting Calls</li>
+        </ul>
+        
+        <a href="register.html?mode=agency&tier=pro" class="btn-primary" style="text-align: center;">Subscribe to Pro</a>
+      </div>
+
+      <!-- Premium Agency -->
+      <div class="pricing-card">
+        <h3 class="plan-name">Production Tier</h3>
+        <div class="plan-price">$199 <span>/ month</span></div>
+        <p class="plan-desc">For serious production companies running massive casting operations.</p>
+        
+        <ul class="feature-list">
+          <li class="pro-feature"><svg stroke="currentColor" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Featured Casting Calls (pinned)</li>
+          <li class="pro-feature"><svg stroke="currentColor" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Priority access to top talent</li>
+          <li><svg stroke="currentColor" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Everything in Pro</li>
+          <li><svg stroke="currentColor" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> 24/7 Priority Support</li>
+        </ul>
+        
+        <a href="register.html?mode=agency&tier=premium" class="btn-secondary" style="text-align: center;">Contact Sales</a>
+      </div>
+      
+    </div>
+
+    <!-- ACTORS GRID (Hidden by default) -->
+    <div class="pricing-grid" id="grid-actors" style="display: none; max-width: 800px; margin: 0 auto 5rem;">
+      
+      <!-- Free Actor -->
+      <div class="pricing-card" style="max-width: 380px;">
+        <h3 class="plan-name">Basic Profile</h3>
+        <div class="plan-price">$0 <span>/ forever</span></div>
+        <p class="plan-desc">Get your face onto the board and apply to a few jobs to get your footing.</p>
+        
+        <ul class="feature-list">
+          <li><svg stroke="currentColor" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Create public profile</li>
+          <li><svg stroke="currentColor" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Upload 3 photos</li>
+          <li><svg stroke="currentColor" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Apply to 2 Casting Calls / month</li>
+          <li class="missing"><svg stroke="currentColor" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg> Verified Badge</li>
+        </ul>
+        
+        <a href="register.html?mode=actor&tier=free" class="btn-secondary" style="text-align: center;">Register for Free</a>
+      </div>
+
+      <!-- Premium Actor -->
+      <div class="pricing-card featured" style="max-width: 380px;">
+        <div class="featured-badge">Pro Actor</div>
+        <h3 class="plan-name">Premium Portfolio</h3>
+        <div class="plan-price">$12 <span>/ month</span></div>
+        <p class="plan-desc">Rank higher in searches, prove your credibility, and upload your reels.</p>
+        
+        <ul class="feature-list">
+          <li class="pro-feature"><svg stroke="currentColor" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> <strong>Blue Verified Badge</strong></li>
+          <li class="pro-feature"><svg stroke="currentColor" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> <strong>Higher search visibility</strong></li>
+          <li><svg stroke="currentColor" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Upload Showreel & Videos</li>
+          <li><svg stroke="currentColor" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Unlimited job applications</li>
+        </ul>
+        
+        <a href="register.html?mode=actor&tier=premium" class="btn-primary" style="text-align: center;">Upgrade Portfolio</a>
+      </div>
+
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h3>CastingCore</h3>
+        <p>A digital casting and coordination system enabling production teams to efficiently discover and manage talent.</p>
+      </div>
+      <div class="footer-col">
+        <h3>Quick Links</h3>
+        <a href="index.html">Home</a>
+        <a href="talents.html">Talent Directory</a>
+        <a href="ads.html">Casting Calls</a>
+        <a href="pricing.html">Pricing</a>
+      </div>
+      <div class="footer-col">
+        <h3>Contact Info</h3>
+        <p>Email: support@castingcore.com</p>
+        <p>Phone: +94 77 XXX XXXX</p>
+        <p>Location: Colombo, Sri Lanka</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; 2026 CastingCore. All rights reserved.
+    </div>
+  </footer>
+
+  <script>
+    function switchTab(tab) {
+      document.getElementById('btn-agencies').classList.remove('active');
+      document.getElementById('btn-actors').classList.remove('active');
+      
+      document.getElementById('grid-agencies').style.display = 'none';
+      document.getElementById('grid-actors').style.display = 'none';
+      
+      if(tab === 'agencies') {
+        document.getElementById('btn-agencies').classList.add('active');
+        document.getElementById('grid-agencies').style.display = 'flex';
+      } else {
+        document.getElementById('btn-actors').classList.add('active');
+        document.getElementById('grid-actors').style.display = 'flex';
+      }
+    }
+  </script>
+</body>
+</html>

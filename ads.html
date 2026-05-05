@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Casting Calls - CastingCore</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 3rem auto 2rem;
+      max-width: 1200px;
+      width: 90%;
+    }
+    .page-header h1 {
+      font-size: 2.5rem;
+      letter-spacing: -1px;
+    }
+    .ad-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 2rem;
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .ad-card:hover {
+      box-shadow: 0 10px 30px rgba(235, 255, 112, 0.05);
+      border-color: rgba(235, 255, 112, 0.4);
+      transform: translateY(-5px);
+    }
+    .ad-type-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      background: rgba(235, 255, 112, 0.1);
+      color: var(--accent-color);
+      border: 1px solid var(--accent-color);
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .ad-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .ad-card p {
+      color: var(--text-secondary);
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+    .ad-spec {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+    }
+    
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(5px);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-content {
+      background: var(--bg-secondary);
+      padding: 2.5rem;
+      border-radius: 20px;
+      width: 90%;
+      max-width: 600px;
+      max-height: 90vh;
+      overflow-y: auto;
+      border: 1px solid var(--border-color);
+    }
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--text-secondary);
+    }
+    .form-group input, .form-group textarea, .form-group select {
+      width: 100%;
+      padding: 0.75rem;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      border-radius: 8px;
+      font-family: inherit;
+    }
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+      outline: none;
+      border-color: var(--accent-color);
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-brand">CastingCore</div>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="talents.html" class="nav-link">Talent Directory</a>
+      <a href="ads.html" class="nav-link">Casting Calls</a>
+      <a href="pricing.html" class="nav-link">Pricing</a>
+      <a href="admin.html" class="nav-link">Admin Panel</a>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <h1>Casting Board</h1>
+    <button class="btn-primary" onclick="openAdModal()">Post New Casting Call</button>
+  </div>
+
+  <div class="container" style="margin-bottom: 5rem;">
+    <div class="grid grid-3" id="ads-grid">
+      <!-- Injected by JS -->
+    </div>
+  </div>
+
+  <!-- Post Ad Modal -->
+  <div id="adModal" class="modal">
+    <div class="modal-content">
+      <h3 style="margin-bottom: 1.5rem; font-size: 1.75rem;">Post Casting Call</h3>
+      <form id="ad-form">
+        <div class="form-group">
+          <label>Project Title</label>
+          <input type="text" id="fTitle" required placeholder="e.g. Netflix Mini-Series Lead">
+        </div>
+        <div class="form-group">
+          <label>Project Type</label>
+          <select id="fType" required>
+            <option value="Film">Film</option>
+            <option value="TV Commercial">TV Commercial</option>
+            <option value="Web Series">Web Series</option>
+            <option value="Music Video">Music Video</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Project Description</label>
+          <textarea id="fDesc" rows="4" required placeholder="Describe the shoot, date, and overall requirements..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Roles / Requirements</label>
+          <input type="text" id="fRoles" required placeholder="e.g. Females 20-30, athletic build">
+        </div>
+        <div class="two-col">
+          <div class="form-group" style="width: 100%;">
+            <label>Director/Agency Email</label>
+            <input type="email" id="fEmail" required placeholder="casting@agency.com">
+          </div>
+          <div class="form-group" style="width: 100%;">
+            <label>Application Deadline</label>
+            <input type="date" id="fDeadline" required>
+          </div>
+        </div>
+        
+        <div style="margin-top: 2rem; display: flex; justify-content: flex-end; gap: 1rem;">
+          <button type="button" class="btn-secondary" onclick="closeAdModal()">Cancel</button>
+          <button type="submit" class="btn-primary">Post Call</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h3>CastingCore</h3>
+        <p>A digital casting and coordination system enabling production teams to efficiently discover and manage talent.</p>
+      </div>
+      <div class="footer-col">
+        <h3>Quick Links</h3>
+        <a href="index.html">Home</a>
+        <a href="talents.html">Talent Directory</a>
+        <a href="ads.html">Casting Calls</a>
+        <a href="pricing.html">Pricing</a>
+      </div>
+      <div class="footer-col">
+        <h3>Contact Info</h3>
+        <p>Email: support@castingcore.com</p>
+        <p>Phone: +94 77 XXX XXXX</p>
+        <p>Location: Colombo, Sri Lanka</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; 2026 CastingCore. All rights reserved.
+    </div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script>
+    let ads = [];
+
+    document.addEventListener('DOMContentLoaded', () => {
+      ads = getAds();
+      renderAds();
+
+      document.getElementById('ad-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        saveNewAd();
+      });
+    });
+
+    function renderAds() {
+      const grid = document.getElementById('ads-grid');
+      // We no longer filter out 'Open', we show all but tag them as expired if deadline passed
+      grid.innerHTML = ads.map(a => {
+        const isExpired = a.deadline && new Date(a.deadline) < new Date();
+        const badgeColor = isExpired ? 'rgba(239, 68, 68, 0.1)' : 'rgba(235, 255, 112, 0.1)';
+        const badgeBorder = isExpired ? '#ef4444' : 'var(--accent-color)';
+        const badgeTextColor = isExpired ? '#ef4444' : 'var(--accent-color)';
+        const statusText = isExpired ? 'EXPIRED' : a.projectType;
+        const opacity = isExpired ? '0.6' : '1';
+
+        return `
+        <div class="ad-card" style="opacity: ${opacity};">
+          <div>
+            <div style="display: flex; justify-content: space-between; align-items: start;">
+              <span class="ad-type-badge" style="background: ${badgeColor}; color: ${badgeTextColor}; border-color: ${badgeBorder};">${statusText}</span>
+              ${a.deadline ? `<span style="font-size: 0.8rem; color: var(--text-secondary);">Expires: ${new Date(a.deadline).toLocaleDateString()}</span>` : ''}
+            </div>
+            <h3>${a.title}</h3>
+            <p>${a.description}</p>
+            <div class="ad-spec">
+              <strong>Looking For:</strong> ${a.roles}
+            </div>
+          </div>
+          <div style="margin-top: 1.5rem; display: flex; gap: 0.5rem;">
+            ${isExpired 
+              ? '<button class="btn-secondary" style="flex: 1; cursor: not-allowed; opacity: 0.5;" disabled>Applications Closed</button>'
+              : `<a href="mailto:${a.directorContact}?subject=Application for ${a.title}" class="btn-primary" style="flex: 1; text-align: center;">Apply Now</a>`
+            }
+            <button onclick="shareAd('${a.title}')" class="btn-secondary" style="padding: 0.5rem 1rem;" title="Share">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+            </button>
+          </div>
+        </div>
+      `}).join('');
+    }
+
+    function shareAd(title) {
+      if (navigator.share) {
+        navigator.share({
+          title: 'CastingCore: ' + title,
+          text: 'Check out this casting call on CastingCore: ' + title,
+          url: window.location.href
+        }).catch(err => console.log('Error sharing:', err));
+      } else {
+        const dummyUrl = window.location.href;
+        navigator.clipboard.writeText(dummyUrl).then(() => {
+          alert('Link copied to clipboard!');
+        });
+      }
+    }
+
+    function openAdModal() {
+      document.getElementById('adModal').style.display = 'flex';
+      document.getElementById('ad-form').reset();
+    }
+
+    function closeAdModal() {
+      document.getElementById('adModal').style.display = 'none';
+      document.getElementById('ad-form').reset();
+    }
+
+    function saveNewAd() {
+      const newAd = {
+        id: 'a' + Date.now(),
+        title: document.getElementById('fTitle').value,
+        projectType: document.getElementById('fType').value,
+        description: document.getElementById('fDesc').value,
+        roles: document.getElementById('fRoles').value,
+        directorContact: document.getElementById('fEmail').value,
+        status: "Open",
+        deadline: document.getElementById('fDeadline').value
+      };
+
+      ads.push(newAd);
+      saveAds(ads);
+      renderAds();
+      closeAdModal();
+    }
+  </script>
+</body>
+</html>

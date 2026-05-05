@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Virtual Dressing Room - CastingCore</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+    }
+    
+    .dressing-layout {
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      gap: 3rem;
+      margin: 3rem auto 6rem;
+      align-items: start;
+    }
+    
+    /* The Canvas / Mannequin */
+    .canvas-container {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      height: 800px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: inset 0 0 50px rgba(0,0,0,0.5);
+    }
+
+    .mannequin {
+      position: relative;
+      width: 300px;
+      height: 700px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Head Layer */
+    .layer-head {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      z-index: 10;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+      border: 3px solid rgba(255,255,255,0.1);
+      position: absolute;
+      top: 0;
+    }
+
+    /* Torso Layer */
+    .layer-torso {
+      width: 260px;
+      height: 320px;
+      object-fit: contain;
+      z-index: 5;
+      position: absolute;
+      top: 100px;
+      background: rgba(255,255,255,0.02);
+      border: 1px dashed rgba(255,255,255,0.1);
+      border-radius: 20px 20px 10px 10px;
+    }
+
+    /* Legs Layer */
+    .layer-legs {
+      width: 220px;
+      height: 380px;
+      object-fit: contain;
+      z-index: 4;
+      position: absolute;
+      top: 380px;
+      background: rgba(255,255,255,0.02);
+      border: 1px dashed rgba(255,255,255,0.1);
+      border-radius: 10px 10px 20px 20px;
+    }
+
+    /* Controls */
+    .controls-panel {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 2rem;
+    }
+
+    .controls-panel h2 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .controls-panel p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      margin-bottom: 2rem;
+    }
+
+    .upload-group {
+      margin-bottom: 2rem;
+      background: var(--card-bg);
+      padding: 1.5rem;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .upload-group h3 {
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+      color: var(--accent-color);
+    }
+
+    .file-input-wrapper {
+      position: relative;
+      overflow: hidden;
+      display: inline-block;
+      width: 100%;
+    }
+
+    .file-input-wrapper input[type=file] {
+      font-size: 100px;
+      position: absolute;
+      left: 0;
+      top: 0;
+      opacity: 0;
+      cursor: pointer;
+      height: 100%;
+    }
+
+    .btn-upload {
+      background: rgba(255,255,255,0.1);
+      border: 1px dashed rgba(255,255,255,0.3);
+      color: white;
+      padding: 1rem;
+      width: 100%;
+      text-align: center;
+      border-radius: 8px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      display: block;
+    }
+
+    .file-input-wrapper:hover .btn-upload {
+      background: rgba(235, 255, 112, 0.1);
+      border-color: var(--accent-color);
+      color: var(--accent-color);
+    }
+
+    .controls-actions {
+      margin-top: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    /* AI Loader */
+    .ai-loader-container {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(17,17,17,0.8);
+      backdrop-filter: blur(5px);
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      display: none; /* hidden by default */
+    }
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid rgba(255,255,255,0.1);
+      border-left-color: var(--accent-color);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 1rem;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* AI Result Image */
+    .ai-result-image {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: none;
+      z-index: 50;
+      border-radius: 20px;
+      background: #000;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-brand">CastingCore</div>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="talents.html" class="nav-link">Talent Directory</a>
+      <a href="ads.html" class="nav-link">Casting Calls</a>
+      <a href="pricing.html" class="nav-link">Pricing</a>
+      <a href="admin.html" class="nav-link">Admin Panel</a>
+    </div>
+  </nav>
+
+  <div class="container dressing-layout">
+    <!-- Left: Canvas -->
+    <div class="canvas-container">
+      <div class="mannequin" id="mannequin-container">
+        <!-- Default generic silhouette or empty space -->
+        <img id="layer-head" class="layer-head" src="" alt="Actor Face" style="display:none;">
+        <img id="layer-torso" class="layer-torso" src="" alt="Shirt" style="display:none;">
+        <img id="layer-legs" class="layer-legs" src="" alt="Trousers" style="display:none;">
+        
+        <div id="loading-text" style="position: absolute; top: 50%; color: var(--text-secondary);">Loading Model...</div>
+      </div>
+      
+      <!-- AI Simulated Image Result -->
+      <img id="ai-result-preview" class="ai-result-image" src="ai-preview.png" alt="Generated Output">
+
+      <!-- AI Loading Overlay -->
+      <div class="ai-loader-container" id="ai-loader">
+        <div class="spinner"></div>
+        <div style="color: var(--accent-color); font-weight: 500;">Generating with AI...</div>
+        <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.5rem;">Simulating generative model</div>
+      </div>
+    </div>
+
+    <!-- Right: Controls -->
+    <aside class="controls-panel">
+      <h2>Virtual Dressing Room</h2>
+      <p id="actor-name-display">Load clothes to preview the look.</p>
+
+      <div class="upload-group">
+        <h3>1. Face / Profile</h3>
+        <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">Upload an image to override the default actor's face.</p>
+        <div class="file-input-wrapper">
+          <button class="btn-upload" id="btn-face-text">Choose Face Image</button>
+          <input type="file" id="upload-face" accept="image/*">
+        </div>
+      </div>
+
+      <div class="upload-group">
+        <h3>2. Top / Shirt</h3>
+        <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">Upload a PNG with a transparent background for best results.</p>
+        <div class="file-input-wrapper">
+          <button class="btn-upload" id="btn-shirt-text">Choose Shirt Image</button>
+          <input type="file" id="upload-shirt" accept="image/*">
+        </div>
+      </div>
+
+      <div class="upload-group">
+        <h3>3. Bottom / Trousers</h3>
+        <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">Upload a PNG with a transparent background for best results.</p>
+        <div class="file-input-wrapper">
+          <button class="btn-upload" id="btn-trousers-text">Choose Trousers Image</button>
+          <input type="file" id="upload-trousers" accept="image/*">
+        </div>
+      </div>
+
+      <div class="controls-actions">
+        <button class="btn-primary" id="btn-ai-generate" onclick="generateWithAI()" style="background: linear-gradient(135deg, var(--accent-color), #fff); box-shadow: 0 4px 15px rgba(235, 255, 112, 0.4);">✨ Generate Realistic Preview</button>
+        <a href="ai-preview.png" download="ai-generated-wardrobe.png" id="btn-download" class="btn-primary" style="display: none; background: #2563eb; color: white; text-align: center; text-decoration: none;">Download Image</a>
+        <button class="btn-secondary" onclick="resetClothes()" id="btn-clear">Clear Clothes</button>
+        <a href="#" id="back-to-profile" class="btn-secondary" style="text-align: center; display: block; border-color: rgba(255,255,255,0.1);">Back to Profile</a>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h3>CastingCore</h3>
+        <p>A digital casting and coordination system enabling production teams to efficiently discover and manage talent.</p>
+      </div>
+      <div class="footer-col">
+        <h3>Quick Links</h3>
+        <a href="index.html">Home</a>
+        <a href="talents.html">Talent Directory</a>
+        <a href="ads.html">Casting Calls</a>
+        <a href="pricing.html">Pricing</a>
+      </div>
+      <div class="footer-col">
+        <h3>Contact Info</h3>
+        <p>Email: support@castingcore.com</p>
+        <p>Phone: +94 77 XXX XXXX</p>
+        <p>Location: Colombo, Sri Lanka</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; 2026 CastingCore. All rights reserved.
+    </div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const id = urlParams.get('id');
+      const talents = getTalents();
+      const talent = talents.find(t => t.id === id);
+
+      if (!talent) {
+        document.getElementById('actor-name-display').innerHTML = "No actor selected. Please return to the directory.";
+        document.getElementById('loading-text').textContent = "Error: Actor Not Found";
+        return;
+      }
+
+      // Initialize Canvas
+      document.getElementById('loading-text').style.display = 'none';
+      document.getElementById('actor-name-display').innerHTML = `Currently styling: <strong style="color:white;">${talent.fullName}</strong>`;
+      document.getElementById('back-to-profile').href = `profile.html?id=${talent.id}`;
+      
+      const headImg = document.getElementById('layer-head');
+      headImg.src = talent.profilePicture;
+      headImg.style.display = 'block';
+
+      // Setup Image Uploaders (FileReader API)
+      setupUploader('upload-face', 'layer-head', 'btn-face-text');
+      setupUploader('upload-shirt', 'layer-torso', 'btn-shirt-text');
+      setupUploader('upload-trousers', 'layer-legs', 'btn-trousers-text');
+    });
+
+    function setupUploader(inputId, layerId, btnTextId) {
+      const input = document.getElementById(inputId);
+      const layer = document.getElementById(layerId);
+      const btnText = document.getElementById(btnTextId);
+
+      input.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function(event) {
+            layer.src = event.target.result;
+            layer.style.display = 'block';
+            btnText.textContent = "Change Image";
+            btnText.style.borderColor = "var(--accent-color)";
+            btnText.style.color = "var(--accent-color)";
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+    }
+
+    function resetClothes() {
+      // Revert Face to original actor's profile picture
+      const urlParams = new URLSearchParams(window.location.search);
+      const id = urlParams.get('id');
+      const talents = getTalents();
+      const talent = talents.find(t => t.id === id);
+      if(talent) {
+        document.getElementById('layer-head').src = talent.profilePicture;
+      }
+      document.getElementById('btn-face-text').textContent = "Choose Face Image";
+      document.getElementById('btn-face-text').style = "";
+      document.getElementById('upload-face').value = '';
+
+      document.getElementById('layer-torso').style.display = 'none';
+      document.getElementById('layer-torso').src = '';
+      document.getElementById('btn-shirt-text').textContent = "Choose Shirt Image";
+      document.getElementById('btn-shirt-text').style = "";
+      document.getElementById('upload-shirt').value = '';
+
+      document.getElementById('layer-legs').style.display = 'none';
+      document.getElementById('layer-legs').src = '';
+      document.getElementById('btn-trousers-text').textContent = "Choose Trousers Image";
+      document.getElementById('btn-trousers-text').style = "";
+      document.getElementById('upload-trousers').value = '';
+    }
+
+    function generateWithAI() {
+      // Hide mannequin, show loader
+      document.getElementById('mannequin-container').style.display = 'none';
+      document.getElementById('ai-loader').style.display = 'flex';
+      
+      // Disable buttons
+      document.getElementById('btn-ai-generate').disabled = true;
+      document.getElementById('btn-clear').disabled = true;
+
+      // Simulate API Call delay (3 seconds)
+      setTimeout(() => {
+        // Hide loader
+        document.getElementById('ai-loader').style.display = 'none';
+        
+        // Show result image
+        document.getElementById('ai-result-preview').style.display = 'block';
+
+        // Swap Generate button for Download button
+        document.getElementById('btn-ai-generate').style.display = 'none';
+        document.getElementById('btn-download').style.display = 'block';
+        
+        // Re-enable clear button
+        document.getElementById('btn-clear').disabled = false;
+        
+        // Update title
+        document.getElementById('actor-name-display').innerHTML = `<strong>AI Generated Result</strong>`;
+      }, 3000);
+    }
+  </script>
+</body>
+</html>

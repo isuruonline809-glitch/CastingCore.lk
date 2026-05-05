@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Talent Profile - CastingCore</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    body {
+      background-image: url('https://images.unsplash.com/photo-1506461883276-594a12b11e61?auto=format&fit=crop&q=80&w=2000'); 
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      color: white;
+    }
+    
+    .navbar {
+      background-color: rgba(0,0,0,0.3);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 5%;
+    }
+    
+    .nav-brand {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: var(--text-primary);
+    }
+    
+    .nav-links {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+    
+    .nav-link {
+      font-weight: 600;
+      color: var(--text-primary);
+      padding: 0.5rem 1.25rem;
+      border-radius: 50px;
+      border: 1px solid var(--border-color);
+      transition: var(--transition);
+      background-color: transparent;
+      text-decoration: none;
+    }
+    
+    .nav-link:hover {
+      background-color: var(--accent-color);
+      color: #111111;
+      border-color: var(--accent-color);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(235, 255, 112, 0.2);
+    }
+    
+    .glass-card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 40px;
+      padding: 4rem 3rem;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      margin: 4rem auto;
+      max-width: 700px;
+    }
+    
+    .profile-photo-wrapper {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+      border: 2px solid rgba(255,255,255,0.4);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    }
+    
+    .profile-photo-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .aesthetic-h1 {
+      font-size: 2.75rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+      color: white;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    
+    .aesthetic-h2 {
+      font-size: 1.25rem;
+      font-weight: 400;
+      color: rgba(255,255,255,0.85);
+      margin-bottom: 3rem;
+    }
+    
+    .glass-stats-box {
+      width: 100%;
+      background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.02));
+      backdrop-filter: blur(30px);
+      -webkit-backdrop-filter: blur(30px);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 30px;
+      padding: 2.5rem;
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 3rem;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    }
+    
+    .stat-block {
+      text-align: center;
+    }
+    
+    .stat-block strong {
+      font-size: 1.75rem;
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: white;
+    }
+    
+    .stat-block span {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.7);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+    
+    .glass-btn {
+      background: #ffffff;
+      color: #000000;
+      font-size: 1.15rem;
+      font-weight: 600;
+      padding: 1.25rem 3rem;
+      border-radius: 50px;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      transition: all 0.3s ease;
+      text-align: center;
+      text-decoration: none;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      display: inline-block;
+    }
+    
+    .glass-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+      background: #f1f1f1;
+    }
+
+    .aesthetic-badge {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      color: white;
+    }
+
+    .aesthetic-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 1rem;
+    }
+
+    .aesthetic-gallery img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-brand">CastingCore</div>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="talents.html" class="nav-link">Talent Directory</a>
+      <a href="ads.html" class="nav-link">Casting Calls</a>
+      <a href="pricing.html" class="nav-link">Pricing</a>
+      <a href="admin.html" class="nav-link">Admin Panel</a>
+    </div>
+  </nav>
+
+  <div id="profile-container">
+    <!-- Rendered by JS -->
+  </div>
+
+  <footer class="site-footer" style="margin-top:0; background:rgba(0,0,0,0.8); border-top: 1px solid rgba(255,255,255,0.1);">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h3>CastingCore</h3>
+        <p>A digital casting and coordination system enabling production teams to efficiently discover and manage talent.</p>
+      </div>
+      <div class="footer-col">
+        <h3>Quick Links</h3>
+        <a href="index.html">Home</a>
+        <a href="talents.html">Talent Directory</a>
+        <a href="ads.html">Casting Calls</a>
+        <a href="pricing.html">Pricing</a>
+      </div>
+      <div class="footer-col">
+        <h3>Contact Info</h3>
+        <p>Email: support@castingcore.com</p>
+        <p>Phone: +94 77 XXX XXXX</p>
+        <p>Location: Colombo, Sri Lanka</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; 2026 CastingCore. All rights reserved.
+    </div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const id = urlParams.get('id');
+      const talents = getTalents();
+      const talent = talents.find(t => t.id === id);
+
+      if (!talent) {
+        document.getElementById('profile-container').innerHTML = `
+          <div style="text-align: center; padding: 4rem;">
+            <h2>Profile Not Found</h2>
+            <a href="talents.html" class="btn-primary" style="margin-top: 1rem; display: inline-block;">Back to Directory</a>
+          </div>
+        `;
+        return;
+      }
+
+      document.title = `${talent.fullName} - CastingCore`;
+
+      let skillsBadges = [];
+      if(talent.skills.acting) skillsBadges.push('Acting');
+      if(talent.skills.dancing) skillsBadges.push('Dancing');
+      if(talent.skills.singing) skillsBadges.push('Singing');
+      if(talent.skills.painting) skillsBadges.push('Painting');
+      if(talent.skills.dubbing) skillsBadges.push('Dubbing');
+      if(talent.skills.swimming) skillsBadges.push('Swimming');
+      if(talent.skills.driving && talent.skills.driving.canDrive) skillsBadges.push('Driving');
+      talent.skills.sports.forEach(s => skillsBadges.push(s));
+      talent.skills.special.forEach(s => skillsBadges.push(s));
+
+      document.getElementById('profile-container').innerHTML = `
+        <div class="glass-card">
+          <div class="profile-photo-wrapper">
+            <img src="${talent.profilePicture}" alt="${talent.fullName}">
+          </div>
+          
+          <h1 class="aesthetic-h1">${talent.fullName}</h1>
+          <h2 class="aesthetic-h2">${talent.professional.experienceLevel} Talent</h2>
+
+          <div class="glass-stats-box">
+            <div class="stat-block">
+              <strong>⭐ 5.0</strong>
+              <span>Rating</span>
+            </div>
+            <div class="stat-block">
+              <strong>${talent.physical.height} cm</strong>
+              <span>Height</span>
+            </div>
+            <div class="stat-block">
+              <strong>${talent.age}</strong>
+              <span>Years Old</span>
+            </div>
+          </div>
+          
+          <div style="display: flex; gap: 1rem; width: 100%; justify-content: center;">
+            <a href="#" onclick="promptUpsell('${talent.contact.manager}', '${talent.fullName}'); return false;" class="glass-btn">Get in Touch</a>
+            <a href="dressing-room.html?id=${talent.id}" class="glass-btn" style="background: var(--accent-color); color: #111;">Dressing Room</a>
+          </div>
+          
+          <div style="margin-top: 4rem; width: 100%; text-align: left;">
+            <h3 style="font-size: 1.25rem; font-weight: 500; margin-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem;">About</h3>
+            <p style="color: rgba(255,255,255,0.8); line-height: 1.6; margin-bottom: 2.5rem;">${talent.description || "No bio provided."}</p>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 2rem; margin-bottom: 2.5rem;">
+              <div>
+                <span style="color: rgba(255,255,255,0.5); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; display: block; margin-bottom: 0.25rem;">Location</span>
+                <strong style="font-size: 1.1rem; font-weight: 500;">${talent.availability.location}</strong>
+              </div>
+              <div>
+                <span style="color: rgba(255,255,255,0.5); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; display: block; margin-bottom: 0.25rem;">Age</span>
+                <strong style="font-size: 1.1rem; font-weight: 500;">${talent.age} Years</strong>
+              </div>
+              <div>
+                <span style="color: rgba(255,255,255,0.5); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; display: block; margin-bottom: 0.25rem;">Height</span>
+                <strong style="font-size: 1.1rem; font-weight: 500;">${talent.physical.height} cm</strong>
+              </div>
+              <div>
+                <span style="color: rgba(255,255,255,0.5); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; display: block; margin-bottom: 0.25rem;">Skin Tone</span>
+                <strong style="font-size: 1.1rem; font-weight: 500;">${talent.physical.skinTone}</strong>
+              </div>
+              <div>
+                <span style="color: rgba(255,255,255,0.5); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; display: block; margin-bottom: 0.25rem;">Dress Size</span>
+                <strong style="font-size: 1.1rem; font-weight: 500;">${talent.physical.clothingSize ? (talent.physical.clothingSize.shirt + ' / ' + talent.physical.clothingSize.trousers) : 'N/A'}</strong>
+              </div>
+              <div>
+                <span style="color: rgba(255,255,255,0.5); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; display: block; margin-bottom: 0.25rem;">Education</span>
+                <strong style="font-size: 1.1rem; font-weight: 500;">${talent.education || 'N/A'}</strong>
+              </div>
+              <div>
+                <span style="color: rgba(255,255,255,0.5); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; display: block; margin-bottom: 0.25rem;">Rate</span>
+                <strong style="font-size: 1.1rem; font-weight: 500;">${talent.professional.hourlyRate && talent.professional.hourlyRate !== 'Negotiable' ? '$' + talent.professional.hourlyRate + '/hr' : 'Negotiable'}</strong>
+              </div>
+              <div>
+                <span style="color: rgba(255,255,255,0.5); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; display: block; margin-bottom: 0.25rem;">Contact</span>
+                <strong style="font-size: 1.1rem; font-weight: 500;">${talent.contact.phone || 'N/A'}</strong>
+              </div>
+              <div>
+                <span style="color: rgba(255,255,255,0.5); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; display: block; margin-bottom: 0.25rem;">Social Media</span>
+                ${talent.contact.socialMedia ? `<a href="${talent.contact.socialMedia}" target="_blank" style="color:var(--accent-color); font-weight: 500;">View Profile</a>` : '<strong style="font-size: 1.1rem; font-weight: 500;">N/A</strong>'}
+              </div>
+            </div>
+
+            <h3 style="font-size: 1.25rem; font-weight: 500; margin-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem;">Skills & Attributes</h3>
+            <div style="display:flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2.5rem;">
+              <span class="aesthetic-badge">Languages: ${talent.skills.languages.join(', ')}</span>
+              <span class="aesthetic-badge">WT: ${talent.physical.weight} kg</span>
+              ${skillsBadges.map(b => `<span class="aesthetic-badge">${b}</span>`).join('')}
+            </div>
+
+            <h3 style="font-size: 1.25rem; font-weight: 500; margin-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem;">Gallery</h3>
+            <p style="color: rgba(255,255,255,0.7); margin-bottom: 1rem; font-size: 0.9rem;">Past Work: ${talent.professional.pastWork.join(', ')}</p>
+            <div class="aesthetic-gallery">
+              <img src="${talent.profilePicture}" alt="Portrait">
+              ${talent.gallery.map(img => `<img src="${img}" alt="Gallery">`).join('')}
+            </div>
+          </div>
+        </div>
+      `;
+    });
+
+    function promptUpsell(email, name) {
+      const upgrade = confirm("Unlock Direct Contact?\n\nFree Agency accounts cannot directly contact talent. Would you like to view our Pro Plans to unlock unlimited direct messaging?");
+      if(upgrade) {
+        window.location.href = "pricing.html";
+      } else {
+        // Log block
+      }
+    }
+  </script>
+</body>
+</html>

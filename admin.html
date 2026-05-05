@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - CastingCore</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    .admin-layout {
+      margin-top: 2rem;
+      margin-bottom: 4rem;
+    }
+    .header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--card-bg);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    th {
+      background: rgba(0,0,0,0.2);
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+    .action-btn {
+      background: none;
+      border: none;
+      color: var(--text-primary);
+      cursor: pointer;
+      margin-right: 0.5rem;
+      text-decoration: underline;
+    }
+    .action-btn.delete {
+      color: #ef4444;
+    }
+    
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.8);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-content {
+      background: var(--bg-secondary);
+      padding: 2rem;
+      border-radius: 12px;
+      width: 600px;
+      max-width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+      border: 1px solid var(--border-color);
+    }
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 0.25rem;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 0.5rem;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      color: white;
+      border-radius: 4px;
+    }
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-brand">CastingCore Admin</div>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Back to Site</a>
+      <a href="pricing.html" class="nav-link">Pricing</a>
+      <a href="ads.html" class="nav-link">Casting Calls</a>
+    </div>
+  </nav>
+
+  <div class="container admin-layout">
+    <div class="header-row">
+      <h2>Talent Management</h2>
+      <button class="btn-primary" onclick="openModal()">+ Add New Talent</button>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Gender</th>
+          <th>Experience</th>
+          <th>Location</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="admin-tbody">
+        <!-- Rendered by JS -->
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Add/Edit Talent Modal -->
+  <div id="addModal" class="modal">
+    <div class="modal-content">
+      <h3 id="modal-title" style="margin-bottom: 1.5rem;">Add New Talent</h3>
+      <form id="add-form">
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" id="fName" required>
+        </div>
+        <div class="form-group">
+          <label>Profile Picture URL</label>
+          <input type="url" id="fPic" required>
+        </div>
+        <div class="two-col">
+          <div class="form-group">
+            <label>Gender</label>
+            <select id="fGender" required>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Age</label>
+            <input type="number" id="fAge" required>
+          </div>
+          <div class="form-group">
+            <label>Height (cm)</label>
+            <input type="number" id="fHeight" required>
+          </div>
+          <div class="form-group">
+            <label>Shirt Size</label>
+            <input type="text" id="fShirt">
+          </div>
+          <div class="form-group">
+            <label>Trousers Size</label>
+            <input type="text" id="fTrousers">
+          </div>
+          <div class="form-group">
+            <label>Skin Tone</label>
+            <select id="fSkinTone">
+              <option value="Fair">Fair</option>
+              <option value="Medium">Medium</option>
+              <option value="Olive">Olive</option>
+              <option value="Brown">Brown</option>
+              <option value="Dark">Dark</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Experience</label>
+            <select id="fExp">
+              <option value="Beginner">Beginner</option>
+              <option value="Intermediate">Intermediate</option>
+              <option value="Professional">Professional</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="two-col">
+          <div class="form-group">
+            <label>Location</label>
+            <input type="text" id="fLocation" required>
+          </div>
+          <div class="form-group">
+            <label>Education</label>
+            <input type="text" id="fEducation">
+          </div>
+          <div class="form-group">
+            <label>Hourly Rate ($)</label>
+            <input type="number" id="fRate">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label>Gallery Image URLs (comma separated)</label>
+          <input type="text" id="fGallery">
+        </div>
+
+        <div class="two-col">
+          <div class="form-group">
+            <label>Contact Number</label>
+            <input type="tel" id="fPhone">
+          </div>
+          <div class="form-group">
+            <label>Social Media Link</label>
+            <input type="url" id="fSocial">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label>Description / Bio</label>
+          <textarea id="fDesc" rows="3" style="width: 100%; border-radius: 4px; padding: 0.5rem; background: var(--bg-primary); border: 1px solid var(--border-color); color: white; font-family: inherit; resize: vertical;" placeholder="Add a short bio..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Skills</label>
+          <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <label style="display: flex; align-items: center; gap: 0.25rem; font-size: 0.9rem; color: var(--text-secondary);"><input type="checkbox" id="chk-acting"> Acting</label>
+            <label style="display: flex; align-items: center; gap: 0.25rem; font-size: 0.9rem; color: var(--text-secondary);"><input type="checkbox" id="chk-dancing"> Dancing</label>
+            <label style="display: flex; align-items: center; gap: 0.25rem; font-size: 0.9rem; color: var(--text-secondary);"><input type="checkbox" id="chk-singing"> Singing</label>
+            <label style="display: flex; align-items: center; gap: 0.25rem; font-size: 0.9rem; color: var(--text-secondary);"><input type="checkbox" id="chk-painting"> Painting</label>
+            <label style="display: flex; align-items: center; gap: 0.25rem; font-size: 0.9rem; color: var(--text-secondary);"><input type="checkbox" id="chk-driving"> Driving</label>
+            <label style="display: flex; align-items: center; gap: 0.25rem; font-size: 0.9rem; color: var(--text-secondary);"><input type="checkbox" id="chk-dubbing"> Dubbing</label>
+            <label style="display: flex; align-items: center; gap: 0.25rem; font-size: 0.9rem; color: var(--text-secondary);"><input type="checkbox" id="chk-swimming"> Swimming</label>
+          </div>
+        </div>
+
+        <div style="margin-top: 2rem; display: flex; justify-content: flex-end; gap: 1rem;">
+          <button type="button" class="btn-secondary" onclick="closeModal()">Cancel</button>
+          <button type="submit" class="btn-primary">Save Talent</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h3>CastingCore</h3>
+        <p>A digital casting and coordination system enabling production teams to efficiently discover and manage talent.</p>
+      </div>
+      <div class="footer-col">
+        <h3>Quick Links</h3>
+        <a href="index.html">Home</a>
+        <a href="talents.html">Talent Directory</a>
+        <a href="ads.html">Casting Calls</a>
+        <a href="pricing.html">Pricing</a>
+      </div>
+      <div class="footer-col">
+        <h3>Contact Info</h3>
+        <p>Email: support@castingcore.com</p>
+        <p>Phone: +94 77 XXX XXXX</p>
+        <p>Location: Colombo, Sri Lanka</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; 2026 CastingCore. All rights reserved.
+    </div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script>
+    let talents = [];
+    let currentEditId = null;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      talents = getTalents();
+      renderTable();
+
+      document.getElementById('add-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        saveTalent();
+      });
+    });
+
+    function renderTable() {
+      const tbody = document.getElementById('admin-tbody');
+      tbody.innerHTML = talents.map(t => `
+        <tr>
+          <td><div style="display:flex; align-items:center; gap: 10px;">
+            <img src="${t.profilePicture}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;">
+            <strong>${t.fullName}</strong>
+          </div></td>
+          <td>${t.gender}</td>
+          <td>${t.professional.experienceLevel}</td>
+          <td>${t.availability.location}</td>
+          <td>
+            <a href="profile.html?id=${t.id}" target="_blank" class="action-btn">View</a>
+            <button class="action-btn" style="color: var(--accent-color);" onclick="openModal('${t.id}')">Edit</button>
+            <button class="action-btn delete" onclick="deleteTalent('${t.id}')">Delete</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function deleteTalent(id) {
+      if(confirm('Are you sure you want to delete this profile?')) {
+        talents = talents.filter(t => t.id !== id);
+        saveTalents(talents);
+        renderTable();
+      }
+    }
+
+    function openModal(id = null) {
+      currentEditId = id;
+      const modal = document.getElementById('addModal');
+      const title = document.getElementById('modal-title');
+      const form = document.getElementById('add-form');
+      
+      form.reset();
+      
+      if (id) {
+        title.textContent = 'Edit Talent';
+        const t = talents.find(talent => talent.id === id);
+        if (t) {
+          document.getElementById('fName').value = t.fullName;
+          document.getElementById('fPic').value = t.profilePicture;
+          document.getElementById('fDesc').value = t.description || '';
+          document.getElementById('fAge').value = t.age;
+          document.getElementById('fGender').value = t.gender;
+          document.getElementById('fHeight').value = t.physical.height;
+          document.getElementById('fShirt').value = t.physical.clothingSize?.shirt || '';
+          document.getElementById('fTrousers').value = t.physical.clothingSize?.trousers || '';
+          document.getElementById('fSkinTone').value = t.physical.skinTone || 'Any';
+          document.getElementById('fExp').value = t.professional.experienceLevel;
+          document.getElementById('fRate').value = t.professional.hourlyRate || '';
+          document.getElementById('fLocation').value = t.availability.location;
+          document.getElementById('fEducation').value = t.education || '';
+          document.getElementById('fGallery').value = Array.isArray(t.gallery) ? t.gallery.join(', ') : '';
+          document.getElementById('fPhone').value = t.contact.phone || '';
+          document.getElementById('fSocial').value = t.contact.socialMedia || '';
+          
+          document.getElementById('chk-acting').checked = t.skills.acting;
+          document.getElementById('chk-dancing').checked = t.skills.dancing;
+          document.getElementById('chk-singing').checked = t.skills.singing;
+          document.getElementById('chk-painting').checked = t.skills.painting;
+          document.getElementById('chk-driving').checked = t.skills.driving?.canDrive || false;
+          document.getElementById('chk-dubbing').checked = t.skills.dubbing;
+          document.getElementById('chk-swimming').checked = t.skills.swimming;
+        }
+      } else {
+        title.textContent = 'Add New Talent';
+      }
+      
+      modal.style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('addModal').style.display = 'none';
+      document.getElementById('add-form').reset();
+      currentEditId = null;
+    }
+
+    function saveTalent() {
+      const talentData = {
+        fullName: document.getElementById('fName').value,
+        profilePicture: document.getElementById('fPic').value,
+        description: document.getElementById('fDesc').value,
+        gallery: document.getElementById('fGallery').value ? document.getElementById('fGallery').value.split(',').map(s=>s.trim()) : [],
+        education: document.getElementById('fEducation').value,
+        age: document.getElementById('fAge').value,
+        gender: document.getElementById('fGender').value,
+        physical: {
+          height: document.getElementById('fHeight').value,
+          weight: 0, skinTone: document.getElementById('fSkinTone').value || 'Any', hairColor: 'Any', eyeColor: 'Any',
+          clothingSize: {
+            shirt: document.getElementById('fShirt').value || 'N/A',
+            trousers: document.getElementById('fTrousers').value || 'N/A'
+          }
+        },
+        professional: {
+          experienceLevel: document.getElementById('fExp').value,
+          hourlyRate: document.getElementById('fRate').value || 'Negotiable',
+          pastWork: [], portfolioUrl: ""
+        },
+        skills: {
+          languages: ["English"],
+          driving: { canDrive: document.getElementById('chk-driving').checked, type: "Any" },
+          acting: document.getElementById('chk-acting').checked,
+          dancing: document.getElementById('chk-dancing').checked,
+          singing: document.getElementById('chk-singing').checked,
+          painting: document.getElementById('chk-painting').checked,
+          dubbing: document.getElementById('chk-dubbing').checked,
+          swimming: document.getElementById('chk-swimming').checked,
+          sports: [], special: []
+        },
+        availability: {
+          dates: [],
+          location: document.getElementById('fLocation').value,
+          willingToTravel: true
+        },
+        contact: {
+          manager: "admin@castingcore.com",
+          direct: "contact@example.com",
+          phone: document.getElementById('fPhone').value || "N/A",
+          socialMedia: document.getElementById('fSocial').value || ""
+        }
+      };
+
+      if (currentEditId) {
+        talentData.id = currentEditId;
+        const index = talents.findIndex(t => t.id === currentEditId);
+        if (index !== -1) {
+          talents[index] = { ...talents[index], ...talentData };
+        }
+      } else {
+        talentData.id = 't' + Date.now();
+        talents.push(talentData);
+      }
+
+      saveTalents(talents);
+      renderTable();
+      closeModal();
+    }
+  </script>
+</body>
+</html>
